@@ -1,21 +1,106 @@
+# ESLint configuration for thirdweb-contracts
+# @description ESLint rules and configuration for TypeScript projects
+# @extends ESLint recommended, TypeScript ESLint, and Prettier
+# @parser TypeScript ESLint parser
+
 extends:
   - "eslint:recommended"
   - "plugin:@typescript-eslint/eslint-recommended"
   - "plugin:@typescript-eslint/recommended"
   - "prettier"
+
 parser: "@typescript-eslint/parser"
+
 parserOptions:
   project: "tsconfig.json"
+  ecmaVersion: 2022
+  sourceType: "module"
+
 plugins:
   - "@typescript-eslint"
+
 root: true
+
+env:
+  node: true
+  es2022: true
+  browser: true
+
+# Global variables
+globals:
+  console: "readonly"
+  process: "readonly"
+  Buffer: "readonly"
+  __dirname: "readonly"
+  __filename: "readonly"
+
 rules:
+  # TypeScript-specific rules
   "@typescript-eslint/no-floating-promises":
     - error
     - ignoreIIFE: true
       ignoreVoid: true
+  
   "@typescript-eslint/no-inferrable-types": "off"
+  
   "@typescript-eslint/no-unused-vars":
     - warn
     - argsIgnorePattern: _
       varsIgnorePattern: _
+  
+  # Additional TypeScript rules for better code quality
+  "@typescript-eslint/explicit-function-return-type": "warn"
+  "@typescript-eslint/explicit-module-boundary-types": "warn"
+  "@typescript-eslint/no-explicit-any": "warn"
+  "@typescript-eslint/no-non-null-assertion": "warn"
+  "@typescript-eslint/ban-ts-comment": "warn"
+  "@typescript-eslint/ban-types": "warn"
+  "@typescript-eslint/consistent-type-imports": "warn"
+  "@typescript-eslint/no-empty-interface": "warn"
+  "@typescript-eslint/no-var-requires": "error"
+  
+  # General ESLint rules
+  "no-console": "warn"
+  "no-debugger": "error"
+  "no-alert": "error"
+  "no-eval": "error"
+  "no-implied-eval": "error"
+  "no-new-func": "error"
+  "no-script-url": "error"
+  
+  # Code style rules
+  "indent": ["error", 2]
+  "quotes": ["error", "single"]
+  "semi": ["error", "always"]
+  "comma-dangle": ["error", "never"]
+  "max-len": ["warn", { "code": 100 }]
+  "no-trailing-spaces": "error"
+  "eol-last": "error"
+  
+  # Import rules
+  "import/order": ["warn", {
+    "groups": ["builtin", "external", "parent", "sibling", "index"],
+    "newlines-between": "always"
+  }]
+  
+  # Node.js rules
+  "node/exports-style": "error"
+  "node/file-extension-in-import": "error"
+  "node/prefer-global/buffer": "error"
+  "node/prefer-global/console": "error"
+  "node/prefer-global/process": "error"
+  "node/prefer-promises/dns": "warn"
+  "node/prefer-promises/fs": "warn"
+
+overrides:
+  - files: ["**/*.test.ts", "**/*.spec.ts"]
+    env:
+      jest: true
+    rules:
+      "@typescript-eslint/no-explicit-any": "off"
+      "no-console": "off"
+      
+  - files: ["scripts/**/*.ts"]
+    rules:
+      "no-console": "off"
+      "@typescript-eslint/no-explicit-any": "off"
